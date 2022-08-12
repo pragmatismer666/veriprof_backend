@@ -81,8 +81,8 @@ class Api extends CI_Controller
         $data = $this->jsonInput();
         extract($data);
         if(!isset($email) || !isset($password)) { return $this->response(['status' => 'error', 'message' => 'Invaild Information']); }
-        $email = strtolower($this->security->xss_clean($email));
-        $user = $this->login_model->loginMe($email, $password, $role);
+        $email = strtolower($this->security->xss_clean(trim($email)));
+        $user = $this->login_model->loginMe(trim($email), $password, $role);
         if($user == []) { return $this->response(['status' => 'error', 'message' => 'Invaild Information']); }
         return $this->response(['status' => 'success', 'message' => 'Login Successfully', 'data' => $user]);
     }
@@ -129,7 +129,6 @@ class Api extends CI_Controller
         catch (\Throwable $th) {
             return $this->response(['status' => 'error', 'message' => 'Invaild Information']);
         }
-        
     }
 
     // finish login, register , forget
@@ -145,6 +144,7 @@ class Api extends CI_Controller
         $filename = $_FILES['file-to-upload']['tmp_name'];
         $savedName = time().'_'.$_FILES['file-to-upload']['name'];
         // $destination = getcwd().'\\assets\\uploads\\'.$savedName;
+        $savedName = str_replace(" ", "_", $savedName);
         $destination = getcwd().'/assets/uploads/'.$savedName;
         move_uploaded_file($filename, $destination);
         return $this->response(['status' => 'success', 'filename' => $savedName]);

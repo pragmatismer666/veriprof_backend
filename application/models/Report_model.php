@@ -22,9 +22,9 @@ class Report_model extends CI_Model
         return false;
     }
 
-    function getReportByName($data) {
+    function getReport() {
         
-        $query = $this->db->select("*")->from('tbl_reports')->where($data)->get();
+        $query = $this->db->select("*")->from('tbl_reports')->get();
         $data = [];
         foreach ($query->result() as $row)
         {

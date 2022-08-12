@@ -312,7 +312,7 @@ class Professional extends CI_Controller
 
     public function getReport() {
         $data = $this->jsonInput();
-        $objs = $this->report_model->getReportByName(array('profess_id' => $data['user_id']));
+        $objs = $this->report_model->getReport();
         return $this->response(['status' => 'success', 'data' => $objs]);
     }
 
