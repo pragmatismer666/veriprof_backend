@@ -30,7 +30,7 @@ class Login_model extends CI_Model
     // function loginMe($email, $password, $role = "public_user")
     function loginMe($email, $password, $role = "administrator")
     {
-        $this->db->select('BaseTbl.userId, BaseTbl.password, BaseTbl.name, BaseTbl.mobile, BaseTbl.picpath, BaseTbl.roleId, BaseTbl.account_type, Roles.role');
+        $this->db->select('BaseTbl.userId, BaseTbl.password, BaseTbl.email, BaseTbl.name, BaseTbl.mobile, BaseTbl.picpath, BaseTbl.roleId, BaseTbl.account_type, Roles.role');
         $this->db->from('tbl_users as BaseTbl');
         $this->db->join('tbl_roles as Roles','Roles.roleId = BaseTbl.roleId');
         $this->db->where('BaseTbl.email', $email);
@@ -65,7 +65,6 @@ class Login_model extends CI_Model
             return false;
         }
     }
-
 
     /**
      * This function used to insert reset password data

@@ -152,23 +152,22 @@
                     </li>
                     <?php
                     /* if($role == ROLE_ADMIN || $role == ROLE_MANAGER)
-            {
-            ?>
-            <li>
-              <a href="#" >
-                <i class="fa fa-thumb-tack"></i>
-                <span>Task Status</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" >
-                <i class="fa fa-upload"></i>
-                <span>Task Uploads</span>
-              </a>
-            </li>
-            <?php
-            } */
-
+                    {
+                    ?>
+                    <li>
+                    <a href="#" >
+                        <i class="fa fa-thumb-tack"></i>
+                        <span>Task Status</span>
+                    </a>
+                    </li>
+                    <li>
+                    <a href="#" >
+                        <i class="fa fa-upload"></i>
+                        <span>Task Uploads</span>
+                    </a>
+                    </li>
+                    <?php
+                    } */
                     ?>
                 </ul>
             </section>
