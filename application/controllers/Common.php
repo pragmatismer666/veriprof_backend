@@ -7,6 +7,7 @@ class Common extends CI_Controller
 
     private static $instance = null;
     public $image_path = "/assets/images/pdf_back.jpeg";
+    public $image_path_bid = "/assets/images/pdf_bid_back.jpg";
     // public $image_path = "\\assets\\images\\pdf_back.jpeg";
 
     public function __construct()
@@ -197,7 +198,7 @@ class Common extends CI_Controller
         try {
             $pdf = new FPDF("P", "mm", "A4");
             $pdf->AddPage();
-            $pdf->Image(getcwd().$this->image_path, 0, 0, 210, 297);
+            $pdf->Image(getcwd().$this->image_path_bid, 0, 0, 210, 297);
             $pdf->SetFont("Arial", null, 20);
             $title = "CONFIRMATION OF Bid PARTCIPATION";
             $pdf->SetXY(40, 75);

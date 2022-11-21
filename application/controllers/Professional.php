@@ -154,7 +154,7 @@ class Professional extends CI_Controller
     public function actionProject()
     {
         $data = $this->jsonInput();
-        $objs = $this->project_model->changeProjectstatus($data['title'], $data['user_id'], $data['verified'], $data["completed_at"], $data["final_cost"]);
+        $objs = $this->project_model->changeProjectstatus($data);
         return $this->response(["status" => "success", "data" => $objs]);
     }
 
@@ -209,6 +209,7 @@ class Professional extends CI_Controller
         $data  = $this->jsonInput();
         $input = $data["data"];
         $head = $data['hoffice'];
+        $directors = $data['directors'];
         $branchs = $data['branchs'];
         $staffs = $data["staffs"];
         $softs = $data["softs"];
@@ -228,10 +229,17 @@ class Professional extends CI_Controller
                     return $this->response(["status" => 'error', 'message' => 'Insert Error, saved only business']);
                 }
             }
+            if (sizeof($directors) > 0) {
+                // log_message("debug", json_encode($branchs));
+                $result01 = $this->support_model->addDirectors($directors, $id, $data['user_id']);
+                if ($result01 == false) {
+                    return $this->response(["status" => 'error', 'message' => 'Insert Error, saved only branchs']);
+                }
+            }
             if (sizeof($staffs) > 0) {
                 $result1 = $this->support_model->addStaff($staffs, $id, $data['user_id'], $result0);
                 if ($result1 == false) {
-                    return $this->response(["status" => 'error', 'message' => 'Saved Offices and Equipments.']);
+                    return $this->response(["status" => 'error', 'message' => 'Saved Offices and Directors.']);
                 } else {
                     return $this->response(["status" => "success", 'message' => 'Saved everything as successfully.']);
                 }
@@ -243,7 +251,7 @@ class Professional extends CI_Controller
             if (sizeof($softs) > 0) {
                 $result2 = $this->support_model->addEquip($softs, $id, $data['user_id'], 'soft');
                 if ($result2 == false) {
-                    return $this->response(["status" => 'error', 'message' => 'Insert Error, saved offices']);
+                    return $this->response(["status" => 'error', 'message' => 'Insert Error, saved offices, Directors, Staffs']);
                 }
             }
             // if (sizeof($hards) == 0) {

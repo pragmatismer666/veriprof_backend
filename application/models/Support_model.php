@@ -40,6 +40,31 @@ class Support_model extends CI_Model
         return true;
     }
 
+    function addDirectors($data, $buzi_id, $user_id){
+        $directorNum = 0;
+        // log_message("debug", "==================================");
+        for ($i = 0; $i < sizeof($data); $i++) {
+            $query = $this->db->select("*")->from("tbl_directors")->where(array("buzi_id" => $buzi_id, "created_by" => $user_id, "prof_reg_no" => $data[$i]["prof_reg_no"], "name" => $data[$i]["name"], "owned" => $data[$i]["owned"]))->get();
+            if (sizeof($query->result()) > 0) {
+                $directorNum++;
+                continue;
+            }
+            $data[$i]["buzi_id"] = $buzi_id;
+            $data[$i]["created_by"] = strval($user_id);
+            $data[$i]["created_at"] = date("Y-m-d h:i:s");
+            // log_message("debug", json_encode($data[$i]));
+            $sql = $this->db->set($data[$i])->get_compiled_insert("tbl_directors");
+            $res = $this->db->simple_query($sql);
+            if ($res) {
+                $directorNum++;
+            }
+        }
+        if (sizeof($data) > $directorNum) {
+            return false;
+        }
+        return true;
+    }
+
     function addEquip($equips, $buzi_id, $created_by, $equipflag)
     {
         $equipNum = 0;

@@ -48,15 +48,21 @@ class Project_model extends CI_Model
         return $data;
     }
 
-    function changeProjectStatus($title, $user_id, $verified, $completed_at, $final_cost)
+    function changeProjectStatus($data)
     {
-        if ($verified == "Completed") {
+        $verified = $data["verified"];
+        $final_cost = $data["final_cost"];
+        $completed_at = $data["completed_at"];
+        $user_id = $data["user_id"];
+        $title = $data["title"];
+        // log_message("debug", json_encode($data));
+        if ($verified == "Completed" || $verified == "Cancelled") {
             $query = $this->db->select("*")->from("tbl_projects")->where(array("created_by" => $user_id, "title" => $title))->order_by("id", "desc")->get();
             foreach ($query->result() as $row) {
                 $variable = number_format((float)((floatval($row->const_cost) - floatval($final_cost)) / floatval($final_cost) * 100), 2, ".", "");
                 $this->db->where("created_by", $user_id);
                 $this->db->where("title", $title);
-                $this->db->update("tbl_projects", ["status" => $verified, "final_cost" => strval($final_cost), "completed_at" => $completed_at, "variable" => $variable]);
+                $this->db->update("tbl_projects", ["status" => $verified, "final_cost" => strval($final_cost), "completed_at" => $completed_at, "variable" => $variable, "pratical_certification" => $data["pratical_certification"], "final_certification" => $data["final_certification"], "final_account" => $data["final_account"]]);
                 break;
             }
         } else {
@@ -70,14 +76,13 @@ class Project_model extends CI_Model
     function updateProject($user_id, $project_id, $update_data)
     {
         $query = $this->db->select("*")->from("tbl_projects")->where(array("created_by" => $user_id, "id" => $project_id))->order_by("id", "desc")->get();
-        if ( sizeof($query->result()) > 0) {
+        if (sizeof($query->result()) > 0) {
             $this->db->where("created_by", $user_id);
             $this->db->where("id", $project_id);
             $this->db->update("tbl_projects", $update_data);
             return $this->db->affected_rows();
-        }
-        else {
-            return false;    
+        } else {
+            return false;
         }
     }
 
