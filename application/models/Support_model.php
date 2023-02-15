@@ -40,7 +40,8 @@ class Support_model extends CI_Model
         return true;
     }
 
-    function addDirectors($data, $buzi_id, $user_id){
+    function addDirectors($data, $buzi_id, $user_id)
+    {
         $directorNum = 0;
         // log_message("debug", "==================================");
         for ($i = 0; $i < sizeof($data); $i++) {
@@ -96,8 +97,6 @@ class Support_model extends CI_Model
 
     function addOffice($head, $branchs, $buzi_id, $created_by)
     {
-        // $headers = 0;
-        $branchsNum = 0;
         $head["buzi_id"] = $buzi_id;
         $head["created_by"] = strval($created_by);
         $head["created_at"] = date("Y-m-d h:i:s");
@@ -105,26 +104,24 @@ class Support_model extends CI_Model
         $head["verify_at"] = "";
         $head["verify_by"] = "";
         $query = $this->db->select("*")->from("tbl_offices")->where(array("buzi_id" => $buzi_id, "created_by" => $created_by, "is_head" => $head["is_head"]))->get();
-        if (sizeof($query->result()) == 0) {
+        if (!empty($head) && sizeof($query->result()) == 0) {
             $sql = $this->db->set($head)->get_compiled_insert("tbl_offices");
-            // $headers = $this->db->simple_query($sql);
-        } 
-        // else {
-        //     $sql = $this->db->set($head)->where(array("buzi_id" => $buzi_id, "created_by" => $created_by, "is_head" => $head["is_head"]))->get_compiled_update("tbl_offices");
-        //     $exist = $this->db->simple_query($sql);
-        //     if ($exist) {
-        //         return (int)(($query->result())[0])->id;
-        //     }
-        //     return 0;
-        // }
+            $this->db->simple_query($sql);
+            $headID = $this->db->insert_id();
+        } else {
+            $sql = $this->db->set($head)->where(array("buzi_id" => $buzi_id, "created_by" => $created_by, "is_head" => $head["is_head"]))->get_compiled_update("tbl_offices");
+            $this->db->simple_query($sql);
+            $headID = (int)(($query->result())[0])->id;
+        }
         // log_message("debug", json_encode($branchs));
+        $branchsNum = 0;
         for ($i = 0; $i < sizeof($branchs); $i++) {
             $branchs[$i]["buzi_id"] = $buzi_id;
             $branchs[$i]["created_by"] = strval($created_by);
             $branchs[$i]["created_at"] = date("Y-m-d h:i:s");
             $branchs[$i]["is_head"] = "0";
-            $branchs[$i]["verify_at"] = "";
-            $branchs[$i]["verify_by"] = "";
+            $branchs[$i]["verified_at"] = "";
+            $branchs[$i]["verified_by"] = "";
             $query = $this->db->select("*")->from("tbl_offices")->where(array("buzi_id" => $buzi_id, "created_by" => $created_by, "phone" => $branchs[$i]["phone"], "email" => $branchs[$i]["email"]))->get();
             if (sizeof(($query->result())) > 0) {
                 $branchsNum++;
@@ -152,12 +149,11 @@ class Support_model extends CI_Model
                 $branchsNum++;
             }
         }
-        return true;
-        // if ($headers) {
-        //     return $this->db->insert_id();
-        // } else {
-        //     return 0;
-        // }
+        if ($headID) {
+            return $this->db->insert_id();
+        } else {
+            return 0;
+        }
     }
 
     function mybranchs($created_by)
@@ -194,22 +190,31 @@ class Support_model extends CI_Model
         return $query->result();
     }
 
+    // ---------------------------------------------- Office -----
+    function getOfficesInfo($data)
+    {
+        $this->db->select("BaseTbl.id, BaseTbl.address, BaseTbl.phone, BaseTbl.email, BaseTbl.res_prof_name, BaseTbl.created_by, BaseTbl.file_address, BaseTbl.file_certificate, BaseTbl.is_head, BaseTbl.status, Business.pname, Business.pcipc_reg_no, Business.ptype");
+        $this->db->from("tbl_offices as BaseTbl");
+        $offices = $this->db->join("tbl_business as Business", "Business.id = BaseTbl.buzi_id")->where($data)->get()->result();
+        log_message("debug", "Support_model getOfficesInfo office = : " . json_encode($offices));
+        for ($i = 0; $i < sizeof($offices); $i++) {
+            $schedules = $this->db->select("*")->from("tbl_schedule")->where(array("verify_target" => "office", "verify_content_id" => $offices[$i]->id, "verify_user_id" => $offices[$i]->created_by))->get()->result();
+            if ($schedules && sizeof($schedules) > 0) {
+                $offices[$i]->schedule_data = $schedules[0]->date;
+                $offices[$i]->schedule_status = $schedules[0]->is_done;
+            } else {
+                $offices[$i]->schedule_data = "";
+                $offices[$i]->schedule_status = "0";
+            }
+        }
+        return $offices;
+    }
+
     function getoffices($data)
     {
         return $this->db->select("*")->from("tbl_offices")->where($data)->get()->result();
     }
-
-    function updateOffices($key, $update)
-    {
-        $query = $this->db->select("*")->from("tbl_offices")->where($update)->get();
-        if (sizeof($query->result()) > 0) {
-            return true;
-        } else {
-            $sql = $this->db->set($update)->where($key)->get_compiled_update("tbl_offices");
-            return $this->db->simple_query($sql);
-        }
-    }
-
+    // ---------------------------------------------- Staff -----
     function getStaff($data)
     {
         $staff = $this->db->select("*")->from("tbl_staffs")->where($data)->get()->result();
@@ -230,5 +235,46 @@ class Support_model extends CI_Model
     {
         $sql = $this->db->set("status", $key)->where("email", $email)->get_compiled_update("tbl_staffs");
         return $this->db->simple_query($sql);
+    }
+
+    // ---------------------------------------------- Schedule -----
+    function addSchedule($data)
+    {
+        try {
+            $exist = $this->db->select("*")->from("tbl_schedule")->where(array("verify_user_id" => $data["verify_user_id"], "verify_target" => $data["verify_target"], "verify_content_id" => $data["verify_content_id"], "created_by" => $data["created_by"]))->get()->result();
+            if (sizeof($exist) > 0) {
+                $updateScheuleQuery = $this->db->set(array("date" => $data["date"], "is_done" => "0"))->where(array("verify_user_id" => $data["verify_user_id"], "verify_target" => $data["verify_target"], "verify_content_id" => $data["verify_content_id"], "created_by" => $data["created_by"], "is_done" => "0"))->get_compiled_update("tbl_schedule");
+                return $this->db->simple_query($updateScheuleQuery);
+            } else {
+                $insertScheduleQuery = $this->db->set($data)->get_compiled_insert("tbl_schedule");
+                return $this->db->simple_query($insertScheduleQuery);
+            }
+        } catch (\Throwable $th) {
+            log_message("debug", "addSchedule error = : " . json_encode($th));
+            return "0";
+        }
+    }
+
+    function getSchedules($key)
+    {
+        $this->db->select("BaseTbl.id, BaseTbl.verify_target, BaseTbl.verify_user_id, BaseTbl.date, BaseTbl.verify_content_id, BaseTbl.created_by, BaseTbl.is_done, User.name, User.email, User.roleId");
+        $this->db->from("tbl_schedule as BaseTbl");
+        $this->db->join("tbl_users as User", "User.userId = BaseTbl.verify_user_id")->where($key);
+        $schedules = $this->db->get()->result();
+        return $schedules;
+    }
+
+    function updateSchedule($key, $update)
+    {
+        $result = $this->db->select("*")->from("tbl_schedule")->where($key)->get();
+        // log_message("debug", "updateSchedule = : " . json_encode($update));
+        if (sizeof($result->result()) > 0) {
+            log_message("debug", "updateSchedule = : exist ");
+            $sql = $this->db->set($update)->where($key)->get_compiled_update("tbl_schedule");
+            return $this->db->simple_query($sql);
+        } else {
+            log_message("debug", "updateSchedule = : none ");
+            return false;
+        }
     }
 }

@@ -38,14 +38,30 @@ class Project_model extends CI_Model
         }
     }
 
-    function getByCreatedBy($data)
+    function getProjectBy($data)
     {
-        $query = $this->db->select("*")->from("tbl_projects")->where("created_by", $data["created_by"])->order_by("id", "desc")->get();
+        $query = $this->db->select("*")->from("tbl_projects")->where($data)->order_by("id", "desc")->get();
         $data = [];
         foreach ($query->result() as $row) {
             $data[] = $row;
         }
         return $data;
+    }
+
+    function getProjectsInfo($data) {
+        $projects = $this->db->select("*")->from("tbl_projects")->where($data)->get()->result();
+        log_message("debug", json_encode($projects));
+        for ($i = 0; $i < sizeof($projects); $i++) {
+            $schedules = $this->db->select("*")->from("tbl_schedule")->where(array("verify_target" => "project", "verify_content_id" => $projects[$i]->id, "verify_user_id" => $projects[$i]->created_by))->get()->result();
+            if ($schedules && sizeof($schedules) > 0) {
+                $projects[$i]->schedule_data = $schedules[0]->date;
+                $projects[$i]->schedule_status = $schedules[0]->is_done;
+            } else {
+                $projects[$i]->schedule_data = "";
+                $projects[$i]->schedule_status = "0";
+            }
+        }
+        return $projects;
     }
 
     function changeProjectStatus($data)
@@ -73,11 +89,10 @@ class Project_model extends CI_Model
         return $this->db->affected_rows();
     }
 
-    function updateProject($user_id, $project_id, $update_data)
+    function updateProject($project_id, $update_data)
     {
-        $query = $this->db->select("*")->from("tbl_projects")->where(array("created_by" => $user_id, "id" => $project_id))->order_by("id", "desc")->get();
+        $query = $this->db->select("*")->from("tbl_projects")->where(array("id" => $project_id))->order_by("id", "desc")->get();
         if (sizeof($query->result()) > 0) {
-            $this->db->where("created_by", $user_id);
             $this->db->where("id", $project_id);
             $this->db->update("tbl_projects", $update_data);
             return $this->db->affected_rows();

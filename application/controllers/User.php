@@ -386,6 +386,7 @@ class User extends BaseController
                 $sessionArray = array(
                     "userId" => $result->userId,
                     "role" => $result->roleId,
+                    "accountType" => $result->account_type,
                     "roleText" => $result->role,
                     "name" => $result->name,
                     "mobile" => $result->mobile,

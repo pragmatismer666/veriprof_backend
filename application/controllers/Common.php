@@ -79,60 +79,80 @@ class Common extends CI_Controller
         try {
             $pdf = new FPDF("P", "mm", "A4");
             $pdf->AddPage();
-            $pdf->Image(getcwd().$this->image_path, 0, 0, 210, 297);
+            $pdf->Image(getcwd() . $this->image_path_bid, 0, 0, 210, 297);
             $pdf->SetFont("Arial", null, 20);
             $pdf->SetXY(70, 65);
-            $pdf->Write(0, $detail["report_type"]."  Submission");
+            $pdf->Write(0, strtoupper($detail["report_type"]) . "  SUBMISSION");
             $font_size = 12;
             $space_size = 6;
-            if ( $detail["report_type"] == "Eplan" ) {
-                $font_size = 11;
-                $space_size = 5.4;
-            }
+            // if ( $detail["report_type"] == "Eplan" ) {
+            //     $font_size = 11;
+            //     $space_size = 5.4;
+            // }
             $pdf->SetFont("Arial", null, $font_size);
             $pdf->SetXY(20, 77);
-            $pdf->Write(0, "Assessor : ".$detail["accessor"]);
+            $pdf->Write(0, "Assessor : " . $detail["accessor"]);
             $pdf->SetXY(20, 83);
-            $pdf->Write(0, "Created Date : ".$detail["created_at"]);
+            $pdf->Write(0, "Created Date : " . $detail["created_at"]);
+            $pdf->SetXY(20, 89);
+            $pdf->Write(0, "Veriprof Score : " . $detail["score"]);
             $continue_number = 0;
-            foreach( $detail["data"] as $each_line ) {
+            $datas = json_decode($detail["data"], true);
+            // log_message("debug", gettype($datas));
+            foreach ($datas as $each_line) {
                 $data = json_decode(json_encode($each_line));
-                $pdf->SetXY(20, 86 + (intval($data->id) - $continue_number)*$space_size);
+                $pdf->SetXY(20, 92 + (intval($data->id) - $continue_number) * $space_size);
                 // log_message("debug", "interval : ".intval($data->id));
                 $keyword = "";
-                if ( strcmp($data->key, "FILE") == 0 || strcmp($data->key, "CREATED BY") == 0 || strcmp($data->key, "ID") == 0 ) {
+                if (strcmp($data->key, "FILE") == 0 || strcmp($data->key, "CREATED BY") == 0 || strcmp($data->key, "ID") == 0 || strcmp($data->key, "SCHEDULE STATUS") == 0) {
                     $continue_number += 1;
                     continue;
-                } else if ( strpos($data->key, "_") !== false ) {
+                } else if (strcmp($data->key, "COMPLETED_AT") == 0) {
+                    $keyword = "COMPLETED DATE";
+                } else if (strcmp($data->key, "PNAME") == 0) {
+                    $keyword = "NAME";
+                } else if (strcmp($data->key, "PTYPE") == 0) {
+                    $keyword = "TYPE";
+                } else if (strpos($data->key, "_") !== false) {
                     $keyword1 = explode("_", $data->key)[0];
                     $keyword2 = explode("_", $data->key)[1];
-                    if ( strcmp($keyword1, "pl") == 0 ) {
-                        $keyword = "PROJECT MANAGER ".strtoupper($keyword2);
-                    } else if ( strcmp($keyword1, "proj") == 0 ) {
-                        $keyword = "PROJECT ".strtoupper($keyword2);
-                    } else if ( strcmp($keyword1, "prof") == 0 ) {
-                        $keyword = "PROFESS ".strtoupper($keyword2);
-                    } else if ( strcmp($keyword1, "const") == 0 ) {
-                        $keyword = "CONSTRUCTION ".strtoupper($keyword2);
+                    if (strcmp($keyword1, "pl") == 0) {
+                        $keyword = "PROJECT MANAGER " . strtoupper($keyword2);
+                    } else if (strcmp($keyword1, "proj") == 0) {
+                        $keyword = "PROJECT " . strtoupper($keyword2);
+                    } else if (strcmp($keyword1, "prof") == 0) {
+                        $keyword = "PROFESS " . strtoupper($keyword2);
+                    } else if (strcmp($keyword1, "const") == 0) {
+                        $keyword = "CONSTRUCTION " . strtoupper($keyword2);
                     } else {
-                        $keyword = strtoupper($keyword1)." ".strtoupper($keyword2);
+                        $keyword = strtoupper($keyword1) . " " . strtoupper($keyword2);
                     }
                 } else {
                     $keyword = strtoupper($data->key);
                 }
                 $pdf->Write(0, $keyword);
-                $pdf->SetXY(100, 86 + (intval($data->id) - $continue_number)*$space_size);
-                $pdf->Write(0, $data->val);
-                $pdf->SetXY(170, 86 + (intval($data->id) - $continue_number)*$space_size);
-                if ( $data->status == 0 ) {
+                $pdf->SetXY(100, 92 + (intval($data->id) - $continue_number) * $space_size);
+                if (strcmp($data->key, "IS HEAD") == 0) {
+                    if (strcmp($data->val, "0") == 0) {
+                        $pdf->Write(0, "Branch Office");
+                        $pdf->SetXY(170, 92 + (intval($data->id) - $continue_number) * $space_size);
+                    } else {
+                        $pdf->Write(0, "Head Office");
+                        $pdf->SetXY(170, 92 + (intval($data->id) - $continue_number) * $space_size);
+                    }
+                } else {
+                    $pdf->Write(0, $data->val);
+                    $pdf->SetXY(170, 92 + (intval($data->id) - $continue_number) * $space_size);
+                }
+                if ($data->status == 0) {
                     $pdf->Write(0, "Unverified");
                 } else {
                     $pdf->Write(0, "Verified");
                 }
             }
             $savedName = time() . "_" . $detail["report_type"] . ".pdf";
-            // $path = getcwd() . "\\assets\\reports\\" . $savedName;
-            $path = getcwd()."/assets/reports/".$savedName;
+            // $path = getcwd() . "\\assets\\create\\report\\" . $savedName;
+            $path = getcwd() . "/assets/create/report/" . $savedName;
             $pdf->Output($path, "F");
             return $savedName;
         } catch (\Throwable $th) {
@@ -145,7 +165,7 @@ class Common extends CI_Controller
         try {
             $pdf = new FPDF("P", "mm", "A4");
             $pdf->AddPage();
-            $pdf->Image(getcwd().$this->image_path, 0, 0, 210, 297);
+            $pdf->Image(getcwd() . $this->image_path, 0, 0, 210, 297);
             $pdf->SetFont("Arial", null, 20);
             $title = "E-PLAN FILLING CONFIRMATION";
             $pdf->SetXY(48, 75);
@@ -172,20 +192,22 @@ class Common extends CI_Controller
             $pdf->SetXY(26, 173);
             $pdf->Write(0, "4. VeriProf PLAN NO  :  " . Strval($detail["project_plan_no"]));
             $pdf->SetXY(26, 181);
-            $pdf->Write(0, "5. ESTIMATED COST  :  " . $detail["project_cost"] . " R");
+            $pdf->Write(0, "5. ESTIMATED COST  :  R" . $detail["project_cost"]);
             $pdf->SetXY(26, 189);
-            $pdf->Write(0, "6. PR. REGISTRATION NO.  :  " . $detail["professional_reg_number"]);
+            $pdf->Write(0, "6. Responsible Prof Name  :  " . $detail["professional"]);
             $pdf->SetXY(26, 197);
-            $pdf->Write(0, "7. EMAIL  :  " . $detail["contact_email"]);
+            $pdf->Write(0, "7. PR. REGISTRATION NO.  :  " . $detail["professional_reg_number"]);
             $pdf->SetXY(26, 205);
-            $pdf->Write(0, "8. TELEPHONE  :  " . $detail["contact_phone"]);
-            $pdf->SetXY(18, 225);
+            $pdf->Write(0, "8. EMAIL  :  " . $detail["contact_email"]);
+            $pdf->SetXY(26, 213);
+            $pdf->Write(0, "9. TELEPHONE  :  " . $detail["contact_phone"]);
+            $pdf->SetXY(18, 220);
             $pdf->Write(0, "Please contact VeriProf for further clarification if required.");
-            $pdf->SetXY(18, 242);
+            $pdf->SetXY(18, 235);
             $pdf->Write(0, "Veriprof");
             $savedName = time() . "_" . $detail["project_title"] . ".pdf";
             // $path = getcwd() . "\\assets\\certificate\\" . $savedName;
-            $path = getcwd()."/assets/certificate/".$savedName;
+            $path = getcwd() . "/assets/certificate/" . $savedName;
             $pdf->Output($path, "F");
             return $savedName;
         } catch (\Throwable $th) {
@@ -198,9 +220,9 @@ class Common extends CI_Controller
         try {
             $pdf = new FPDF("P", "mm", "A4");
             $pdf->AddPage();
-            $pdf->Image(getcwd().$this->image_path_bid, 0, 0, 210, 297);
+            $pdf->Image(getcwd() . $this->image_path_bid, 0, 0, 210, 297);
             $pdf->SetFont("Arial", null, 20);
-            $title = "CONFIRMATION OF Bid PARTCIPATION";
+            $title = "CONFIRMATION OF BID PARTCIPATION";
             $pdf->SetXY(40, 75);
             $pdf->Write(0, $title);
             $pdf->SetFont("Arial", null, 13);
@@ -246,11 +268,11 @@ class Common extends CI_Controller
             $pdf->Write(0, "Issued by VeriProf");
             $savedName = time() . "_" . $detail["bid_no"] . ".pdf";
             // $path = getcwd() . "\\assets\\bid\\" . $savedName;
-            $path = getcwd()."/assets/bid/".$savedName;
+            $path = getcwd() . "/assets/bid/" . $savedName;
             $pdf->Output($path, "F");
             return $savedName;
         } catch (\Throwable $th) {
-            log_message("debug", "create_bid_pdf".json_encode($th));
+            log_message("debug", "create_bid_pdf" . json_encode($th));
             return "false";
         }
     }

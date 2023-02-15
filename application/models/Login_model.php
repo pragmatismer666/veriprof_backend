@@ -154,7 +154,6 @@ class Login_model extends CI_Model
         $this->db->order_by('BaseTbl.id', 'DESC');
         $this->db->limit(1);
         $query = $this->db->get('tbl_last_login as BaseTbl');
-
         return $query->row();
     }
 
@@ -181,6 +180,23 @@ class Login_model extends CI_Model
         $sql = $this->db->set($content)->where($filter)->get_compiled_update('tbl_users');
         $this->db->simple_query($sql);
         return null;
+    }
+
+    function getUserInfo($userId)
+    {
+        $this->db->select('userId, name, email, mobile, roleId, picpath, account_type');
+        $this->db->from('tbl_users');
+        $this->db->where('isDeleted', 0);
+        $this->db->where('roleId !=', 1);
+        $this->db->where('userId', $userId);
+        $query = $this->db->get();
+        $rows = $query->result();
+        log_message('debug', $userId . " -------- " . json_encode($rows));
+        if ($rows != null && $rows != []) {
+            return ($rows)['0'];
+        } else {
+            return $rows;
+        }
     }
 }
 ?>

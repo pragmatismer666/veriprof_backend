@@ -26,10 +26,9 @@ class Api extends CI_Controller
     //     }
     //     return self::$instance;
     // }
-    function response($data)
+    function response($data): void
     {
         echo json_encode($data);
-        return;
     }
 
     function jsonInput()
@@ -85,6 +84,7 @@ class Api extends CI_Controller
                     "userId" => $result->userId,
                     "roleNum" => $result->roleId,
                     "role" => $result->role,
+                    "accountType" => $result->account_type,
                     "name" => $result->name,
                     "mobile" => $result->mobile,
                     "picpath" => $result->picpath,

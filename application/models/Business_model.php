@@ -49,14 +49,6 @@ class Business_model extends CI_Model
         }
     }
 // ---------------- used functions -------------------------------------------
-    // function getBusiness($basedata) {
-    //     $accessor = $basedata['accessor'];
-    //     $biz_num = Strval(count($this->db->select('*')->from('tbl_business')->where('accessor', $accessor)->get()->result()));
-    //     $this->db->distinct();
-    //     $profess_num = Strval(count($this->db->select('profess')->from('tbl_business')->where('accessor', $accessor)->get()->result()));
-    //     return [$biz_num,$profess_num];
-    // }  
-
     function getPendingByCreatedBy($data) {
         $query = $this->db->select("*")->from('tbl_business')->where('created_by', $data['created_by'])->where('status', 'unverified')->get();
         $data = [];
