@@ -56,9 +56,9 @@ class User extends BaseController
         $returns = $this->paginationCompress("userListing/", $count, 10);
         $roleId = $this->session->userdata('role');
         if ($roleId == ROLE_ADMIN) {
-            $data['userRecords'] = $this->user_model->userListing($searchText, $returns["page"], $returns["segment"]);
+            $data['userRecords'] = $this->user_model->userListing($returns["page"], $returns["segment"], $searchText);
         } else {
-            $data['userRecords'] = $this->user_model->userListing($searchText, $returns["page"], $returns["segment"], $roleId);
+            $data['userRecords'] = $this->user_model->userListing($returns["page"], $returns["segment"], $searchText, $roleId);
         }
         $this->global['pageTitle'] = 'VeriProf : User Listing';
         $this->loadViews("users", $this->global, $data, NULL);

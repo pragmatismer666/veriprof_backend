@@ -23,11 +23,7 @@ class User_model extends CI_Model
         'professional'  => '3'
     ];
 
-    /**
-     * This function is used to get the user listing count
-     * @param string $searchText : This is optional search text
-     * @return number $count : This is row count
-     */
+
     function userListingCount($searchText = '')
     {
         $this->db->select('BaseTbl.userId, BaseTbl.email, BaseTbl.name, BaseTbl.mobile, BaseTbl.createdDtm, BaseTbl.updatedDtm, Role.role');
@@ -53,7 +49,7 @@ class User_model extends CI_Model
      * @param number $segment : This is pagination limit
      * @return array $result : This is result
      */
-    function userListing($searchText = '', $page, $segment, $roleId = '')
+    function userListing($page, $segment, $searchText = '', $roleId = '')
     {
         $this->db->select('BaseTbl.userId, BaseTbl.email, BaseTbl.name, BaseTbl.mobile, BaseTbl.createdDtm, BaseTbl.updatedDtm, Role.role');
         $this->db->from('tbl_users as BaseTbl');

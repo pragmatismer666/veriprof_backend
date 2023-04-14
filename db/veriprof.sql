@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 02, 2022 at 03:10 AM
+-- Generation Time: Mar 09, 2023 at 06:00 PM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 7.3.30
 
@@ -62,7 +62,7 @@ CREATE TABLE `tbl_bids` (
 --
 
 INSERT INTO `tbl_bids` (`id`, `name`, `surname`, `professional_reg_no`, `email_add`, `cell`, `bidder`, `client_department`, `bid_no`, `short_description`, `created_by`, `created_at`, `file`) VALUES
-(1, 'veriprof', 'dev', '123456789', 'nurvwshop@gmail.', '0723386835', 'dev', 'Nyitha', '67673', 'Hope to get job.', '41', '2022-11-01 09:00:54.000000', '1667332854_67673.pdf');
+(1, 'Test Bid', 'Test Bid', '123456789', 'nurvwshop@gmail.', '0723386835', 'Toni', 'Nyathi', '20507', 'Mobile project', '41', '2022-12-08 04:52:02.000000', '1670514722_20507.pdf');
 
 -- --------------------------------------------------------
 
@@ -76,10 +76,7 @@ CREATE TABLE `tbl_business` (
   `pcouncil` varchar(64) CHARACTER SET utf16 NOT NULL,
   `pcipc_reg_no` varchar(100) CHARACTER SET utf16 NOT NULL,
   `ptype` enum('CC','Sole Proprietor','Private','Public','Inc','Partnership','Business Trust') CHARACTER SET utf16 NOT NULL DEFAULT 'Sole Proprietor',
-  `director` varchar(128) CHARACTER SET utf16 NOT NULL,
-  `dir_prof_regno` varchar(128) CHARACTER SET utf16 NOT NULL,
-  `owned` varchar(128) CHARACTER SET utf16 NOT NULL,
-  `status` enum('Unverified','Verified','Pending') CHARACTER SET utf16 NOT NULL DEFAULT 'Unverified',
+  `status` enum('Unverified','Verified') CHARACTER SET utf16 NOT NULL DEFAULT 'Unverified',
   `verified_by` varchar(128) CHARACTER SET utf16 DEFAULT NULL,
   `verified_at` date DEFAULT NULL,
   `created_by` varchar(128) CHARACTER SET utf16 NOT NULL,
@@ -90,8 +87,33 @@ CREATE TABLE `tbl_business` (
 -- Dumping data for table `tbl_business`
 --
 
-INSERT INTO `tbl_business` (`id`, `pname`, `pcouncil`, `pcipc_reg_no`, `ptype`, `director`, `dir_prof_regno`, `owned`, `status`, `verified_by`, `verified_at`, `created_by`, `updated_at`) VALUES
-(1, 'Veriprof', '123456', 'dev', 'CC', 'Nikon', '123456', '15', 'Unverified', '', '0000-00-00', '41', '2022-11-01');
+INSERT INTO `tbl_business` (`id`, `pname`, `pcouncil`, `pcipc_reg_no`, `ptype`, `status`, `verified_by`, `verified_at`, `created_by`, `updated_at`) VALUES
+(1, 'WWW', '123456', '456789', 'CC', 'Unverified', NULL, NULL, '41', '2022-12-08');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_directors`
+--
+
+CREATE TABLE `tbl_directors` (
+  `id` bigint(255) NOT NULL,
+  `buzi_id` bigint(255) NOT NULL,
+  `name` varchar(128) NOT NULL,
+  `prof_reg_no` varchar(128) NOT NULL,
+  `owned` varchar(128) NOT NULL,
+  `created_by` bigint(255) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `status` enum('Pending','Unverified','Verified') NOT NULL DEFAULT 'Pending'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `tbl_directors`
+--
+
+INSERT INTO `tbl_directors` (`id`, `buzi_id`, `name`, `prof_reg_no`, `owned`, `created_by`, `created_at`, `status`) VALUES
+(1, 1, 'Tomi', '456789', '15', 41, '2022-12-08 09:07:17', 'Pending'),
+(2, 1, 'Nikon', '456', '10', 41, '2022-12-08 09:07:17', 'Pending');
 
 -- --------------------------------------------------------
 
@@ -114,9 +136,8 @@ CREATE TABLE `tbl_equips` (
 --
 
 INSERT INTO `tbl_equips` (`id`, `buzi_id`, `name`, `filename`, `flag`, `created_by`, `updated_at`) VALUES
-(1, 1, 'env', 'office/1667318100_PDf__test.pdf', 'soft', '41', '2022-11-01 04:55:35'),
-(2, 1, 'test', 'office/1667318115_PDf__test_2.pdf', 'soft', '41', '2022-11-01 04:55:35'),
-(3, 1, 'pc', 'office/1667318133_PDf__test_1.pdf', 'hard', '41', '2022-11-01 04:55:35');
+(1, 1, 'php', 'office/1670530018_PDf__test.pdf', 'soft', '41', '2022-12-08 09:07:17'),
+(2, 1, 'pc', 'office/1670530033_PDf__test.pdf', 'hard', '41', '2022-12-08 09:07:17');
 
 -- --------------------------------------------------------
 
@@ -172,7 +193,30 @@ INSERT INTO `tbl_last_login` (`id`, `userId`, `sessionData`, `machineIp`, `userA
 (16, 41, '{\"userId\":\"41\",\"roleNum\":\"3\",\"role\":\"Professional\",\"name\":\"Nurvwshop\",\"mobile\":\"0723386835\",\"picpath\":\"assets\\/icon-66.png\",\"isLoggedIn\":true}', '192.168.5.61', 'Chrome 87.0.4280.141', 'Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Mobile Safari/537.36', 'Android', '2022-10-12 22:43:50', 'f407e48793f9ba41c8d4cc56cda39ff879ad52e0e626385036807835e969b95c'),
 (17, 41, '{\"userId\":\"41\",\"roleNum\":\"3\",\"role\":\"Professional\",\"name\":\"Nurvwshop\",\"mobile\":\"0723386835\",\"picpath\":\"assets\\/icon-66.png\",\"isLoggedIn\":true}', '192.168.5.61', 'Chrome 87.0.4280.141', 'Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Mobile Safari/537.36', 'Android', '2022-10-12 22:45:08', 'b924560a10b89918c5919196ee6f28bdf480808206893c872b2d7745dd7386a3'),
 (18, 41, '{\"userId\":\"41\",\"roleNum\":\"3\",\"role\":\"Professional\",\"name\":\"Nurvwshop\",\"mobile\":\"0723386835\",\"picpath\":\"assets\\/icon-66.png\",\"isLoggedIn\":true}', '192.168.5.61', 'Chrome 87.0.4280.141', 'Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Mobile Safari/537.36', 'Android', '2022-10-31 07:47:34', 'eddaad7f2b04bb44a1d516952482019b384b37375feb948535c083b861a4adc4'),
-(19, 41, '{\"userId\":\"41\",\"roleNum\":\"3\",\"role\":\"Professional\",\"name\":\"Nurvwshop\",\"mobile\":\"0723386835\",\"picpath\":\"assets\\/icon-66.png\",\"isLoggedIn\":true}', '192.168.5.61', 'Chrome 87.0.4280.141', 'Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Mobile Safari/537.36', 'Android', '2022-11-01 10:55:59', '0956a55192ee2dd961a84aef8f6821118f3411c1d2e0067420b7981e484a5b29');
+(19, 41, '{\"userId\":\"41\",\"roleNum\":\"3\",\"role\":\"Professional\",\"name\":\"Nurvwshop\",\"mobile\":\"0723386835\",\"picpath\":\"assets\\/icon-66.png\",\"isLoggedIn\":true}', '192.168.5.61', 'Chrome 87.0.4280.141', 'Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Mobile Safari/537.36', 'Android', '2022-11-01 10:55:59', '0956a55192ee2dd961a84aef8f6821118f3411c1d2e0067420b7981e484a5b29'),
+(20, 1, '{\"role\":\"1\",\"roleText\":\"Administrator\",\"name\":\"System Administrator\",\"mobile\":\"9890098900\",\"picpath\":\"assets\\/icon-66.png\"}', '::1', 'Chrome 106.0.0.0', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36', 'Windows 10', '2022-11-02 09:24:06', 'admin'),
+(21, 41, '{\"userId\":\"41\",\"roleNum\":\"3\",\"role\":\"Professional\",\"name\":\"Nurvwshop\",\"mobile\":\"0723386835\",\"picpath\":\"assets\\/icon-66.png\",\"isLoggedIn\":true}', '192.168.5.61', 'Chrome 87.0.4280.141', 'Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Mobile Safari/537.36', 'Android', '2022-11-17 16:23:05', '9b3a029bf15f174df6107e61ab73128c202a864138e7144fbf31e00d43447111'),
+(22, 41, '{\"userId\":\"41\",\"roleNum\":\"3\",\"role\":\"Professional\",\"name\":\"Nurvwshop\",\"mobile\":\"0723386835\",\"picpath\":\"assets\\/icon-66.png\",\"isLoggedIn\":true}', '192.168.5.61', 'Chrome 87.0.4280.141', 'Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Mobile Safari/537.36', 'Android', '2022-11-17 21:27:19', '34fb308d4416b0d6cfc363892eca1aa828a752e1301d3de935dd6f4ca35c2494'),
+(23, 41, '{\"userId\":\"41\",\"roleNum\":\"3\",\"role\":\"Professional\",\"name\":\"Nurvwshop\",\"mobile\":\"0723386835\",\"picpath\":\"assets\\/icon-66.png\",\"isLoggedIn\":true}', '192.168.5.61', 'Chrome 87.0.4280.141', 'Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Mobile Safari/537.36', 'Android', '2022-12-05 16:50:34', 'd4dc2f9763c005cba330c64aa4a5d0d6fe3ef7e6d4741f40b5530910638c9014'),
+(24, 40, '{\"userId\":\"40\",\"roleNum\":\"2\",\"role\":\"Assessor\",\"name\":\"Mdingwa Nyathi\",\"mobile\":\"0718881882\",\"picpath\":\"assets\\/icon-66.png\",\"isLoggedIn\":true}', '192.168.5.61', 'Chrome 87.0.4280.141', 'Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Mobile Safari/537.36', 'Android', '2022-12-05 22:11:20', '7d1238bcabf75a4d1f9c2b136634143c028aa3c8d040b2468960adbc945d53ec'),
+(25, 41, '{\"userId\":\"41\",\"roleNum\":\"3\",\"role\":\"Professional\",\"name\":\"Nurvwshop\",\"mobile\":\"0723386835\",\"picpath\":\"assets\\/icon-66.png\",\"isLoggedIn\":true}', '192.168.5.61', 'Safari 604.1', 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1', 'iOS', '2022-12-06 04:10:43', 'cda7a5d50c1ad13ca6954ec7ce3a44e2f612487dca34d5181e88570cc4335544'),
+(26, 41, '{\"userId\":\"41\",\"roleNum\":\"3\",\"role\":\"Professional\",\"name\":\"Nurvwshop\",\"mobile\":\"0723386835\",\"picpath\":\"assets\\/icon-66.png\",\"isLoggedIn\":true}', '192.168.5.61', 'Safari 604.1', 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1', 'iOS', '2022-12-08 20:52:45', 'c14f77f7189534d69f9aa8349a8100d33d95bae1a8fc7848c8186d8e947c8fc0'),
+(27, 40, '{\"userId\":\"40\",\"roleNum\":\"2\",\"role\":\"Assessor\",\"name\":\"Mdingwa Nyathi\",\"mobile\":\"0718881882\",\"picpath\":\"assets\\/icon-66.png\",\"isLoggedIn\":true}', '192.168.5.61', 'Safari 604.1', 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1', 'iOS', '2022-12-08 22:57:18', 'ddfbf880becbabf480999140573acdd39d1854991862eaf4b1abb049aefd411d'),
+(28, 41, '{\"userId\":\"41\",\"roleNum\":\"3\",\"role\":\"Professional\",\"name\":\"Nurvwshop\",\"mobile\":\"0723386835\",\"picpath\":\"assets\\/icon-66.png\",\"isLoggedIn\":true}', '192.168.5.61', 'Safari 604.1', 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1', 'iOS', '2022-12-09 02:30:07', 'fa9af80ba70b346fceab1a0daa5161cbc6863f88601aeb40280fab4f049cad65'),
+(29, 40, '{\"userId\":\"40\",\"roleNum\":\"2\",\"role\":\"Assessor\",\"name\":\"Mdingwa Nyathi\",\"mobile\":\"0718881882\",\"picpath\":\"assets\\/icon-66.png\",\"isLoggedIn\":true}', '192.168.5.61', 'Safari 604.1', 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1', 'iOS', '2022-12-09 03:37:20', 'ee4da2488093de05151a69978a80ebf999baeacd56df596c46f197af4808d6ec'),
+(30, 40, '{\"userId\":\"40\",\"roleNum\":\"2\",\"role\":\"Assessor\",\"name\":\"Mdingwa Nyathi\",\"mobile\":\"0718881882\",\"picpath\":\"assets\\/icon-66.png\",\"isLoggedIn\":true}', '192.168.5.61', 'Chrome 87.0.4280.141', 'Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Mobile Safari/537.36', 'Android', '2022-12-09 20:46:00', 'ebf5ebf41f8531c9846b2828531faa006794e1f0c4b05eaf05e5dc3346fe3cc5'),
+(31, 40, '{\"userId\":\"40\",\"roleNum\":\"2\",\"role\":\"Assessor\",\"name\":\"Mdingwa Nyathi\",\"mobile\":\"0718881882\",\"picpath\":\"assets\\/icon-66.png\",\"isLoggedIn\":true}', '192.168.5.61', 'Chrome 87.0.4280.141', 'Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Mobile Safari/537.36', 'Android', '2022-12-11 19:09:24', '10fb1ec587f90f5554e1626e20af264408115782ea2d5b9de005d0409e4fbb63'),
+(32, 40, '{\"userId\":\"40\",\"roleNum\":\"2\",\"role\":\"Assessor\",\"name\":\"Mdingwa Nyathi\",\"mobile\":\"0718881882\",\"picpath\":\"assets\\/icon-66.png\",\"isLoggedIn\":true}', '192.168.5.61', 'Chrome 87.0.4280.141', 'Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Mobile Safari/537.36', 'Android', '2022-12-14 01:09:11', '0d993f55a431c4de74de4c46f0c9afe002fec3417b813ac7c1f5dda88d5626be'),
+(33, 40, '{\"userId\":\"40\",\"roleNum\":\"2\",\"role\":\"Assessor\",\"name\":\"Mdingwa Nyathi\",\"mobile\":\"0718881882\",\"picpath\":\"assets\\/icon-66.png\",\"isLoggedIn\":true}', '192.168.5.61', 'Chrome 87.0.4280.141', 'Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Mobile Safari/537.36', 'Android', '2022-12-14 19:12:59', '97e112abb079ac09b3f4296383212abb81915c83efa1529db812fa43a2394fd8'),
+(34, 40, '{\"userId\":\"40\",\"roleNum\":\"2\",\"role\":\"Assessor\",\"name\":\"Mdingwa Nyathi\",\"mobile\":\"0718881882\",\"picpath\":\"assets\\/icon-66.png\",\"isLoggedIn\":true}', '192.168.5.61', 'Chrome 87.0.4280.141', 'Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Mobile Safari/537.36', 'Android', '2022-12-17 12:06:28', '92c453295c3c3b672fd7ed4ca2742b90b74d3445356bc0a66d617fb8b433f5a7'),
+(35, 41, '{\"userId\":\"41\",\"roleNum\":\"3\",\"role\":\"Professional\",\"name\":\"Nurvwshop\",\"mobile\":\"0723386835\",\"picpath\":\"assets\\/icon-66.png\",\"isLoggedIn\":true}', '192.168.5.61', 'Chrome 87.0.4280.141', 'Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Mobile Safari/537.36', 'Android', '2022-12-19 11:05:35', 'd3b11e9ae7c8fd60c26b02fce4fdd23ef749cc383e7cfa2a597f65164c06de5a'),
+(36, 40, '{\"userId\":\"40\",\"roleNum\":\"2\",\"role\":\"Assessor\",\"name\":\"Mdingwa Nyathi\",\"mobile\":\"0718881882\",\"picpath\":\"assets\\/icon-66.png\",\"isLoggedIn\":true}', '192.168.5.61', 'Chrome 87.0.4280.141', 'Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Mobile Safari/537.36', 'Android', '2022-12-19 11:39:55', '955fa5f1f70caf66e328927801061db64ea1b1dc7af8e45d52043c679610b854'),
+(37, 40, '{\"userId\":\"40\",\"roleNum\":\"2\",\"role\":\"Assessor\",\"name\":\"Mdingwa Nyathi\",\"mobile\":\"0718881882\",\"picpath\":\"assets\\/icon-66.png\",\"isLoggedIn\":true}', '192.168.5.61', 'Chrome 87.0.4280.141', 'Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Mobile Safari/537.36', 'Android', '2022-12-21 19:18:39', '464706429ab82cf9aea9ed518ab56280d0133fd441ded09f072ec9378ad624bd'),
+(38, 41, '{\"userId\":\"41\",\"roleNum\":\"3\",\"role\":\"Professional\",\"name\":\"Nurvwshop\",\"mobile\":\"0723386835\",\"picpath\":\"assets\\/icon-66.png\",\"isLoggedIn\":true}', '192.168.5.61', 'Chrome 87.0.4280.141', 'Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Mobile Safari/537.36', 'Android', '2023-01-06 10:58:10', '603a6cf23d4ba17a882e363d05617610c8396b97fbfe23be6ac74f6db12aa43f'),
+(39, 41, '{\"userId\":\"41\",\"roleNum\":\"3\",\"role\":\"Professional\",\"name\":\"Nurvwshop\",\"mobile\":\"0723386835\",\"picpath\":\"assets\\/icon-66.png\",\"isLoggedIn\":true}', '192.168.5.61', 'Chrome 87.0.4280.141', 'Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Mobile Safari/537.36', 'Android', '2023-01-06 22:20:02', '9f697cadb9d09bbd6b6cd51ac6815481e0c9c81e1440f183bf4c676ac6513b17'),
+(40, 41, '{\"userId\":\"41\",\"roleNum\":\"3\",\"role\":\"Professional\",\"name\":\"Nurvwshop\",\"mobile\":\"0723386835\",\"picpath\":\"assets\\/icon-66.png\",\"isLoggedIn\":true}', '192.168.5.61', 'Chrome 87.0.4280.141', 'Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Mobile Safari/537.36', 'Android', '2023-01-09 22:47:19', 'efe8e0e9f5af687fe87cd854e73a451f792e85cf4590f875297f07be8d1f73c2'),
+(41, 40, '{\"userId\":\"40\",\"roleNum\":\"2\",\"role\":\"Assessor\",\"name\":\"Mdingwa Nyathi\",\"mobile\":\"0718881882\",\"picpath\":\"assets\\/icon-66.png\",\"isLoggedIn\":true}', '192.168.5.61', 'Chrome 87.0.4280.141', 'Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Mobile Safari/537.36', 'Android', '2023-01-10 03:29:04', '7be654b252313b724b23eb5e4e65cf24ce08c235b29af8424843ccecb79dcc07'),
+(42, 41, '{\"userId\":\"41\",\"roleNum\":\"3\",\"role\":\"Professional\",\"accountType\":\"pro\",\"name\":\"Nurvwshop\",\"mobile\":\"0723386835\",\"picpath\":\"assets\\/icon-66.png\",\"isLoggedIn\":true}', '192.168.5.61', 'Chrome 87.0.4280.141', 'Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Mobile Safari/537.36', 'Android', '2023-02-13 13:56:57', 'af3ed92481e2faa1a4792a6c954e0bb4f91dd2551f6f00441a1fc38ef2a56bfd');
 
 -- --------------------------------------------------------
 
@@ -190,11 +234,11 @@ CREATE TABLE `tbl_offices` (
   `res_prof_reg` varchar(128) CHARACTER SET utf8 NOT NULL,
   `created_by` varchar(128) CHARACTER SET utf8 NOT NULL,
   `created_at` datetime(6) NOT NULL,
-  `verify_by` varchar(128) CHARACTER SET utf16 DEFAULT NULL,
-  `verify_at` datetime(6) DEFAULT NULL,
+  `verified_by` varchar(128) CHARACTER SET utf16 DEFAULT NULL,
+  `verified_at` datetime(6) DEFAULT NULL,
   `file_address` varchar(255) CHARACTER SET utf8 NOT NULL,
   `file_certificate` varchar(255) CHARACTER SET utf8 NOT NULL,
-  `status` enum('Unverified','Verified','Pending') CHARACTER SET utf8 NOT NULL DEFAULT 'Unverified',
+  `status` enum('Unverified','Verified') CHARACTER SET utf8 NOT NULL DEFAULT 'Unverified',
   `is_head` enum('1','0') CHARACTER SET utf8 NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -202,9 +246,9 @@ CREATE TABLE `tbl_offices` (
 -- Dumping data for table `tbl_offices`
 --
 
-INSERT INTO `tbl_offices` (`id`, `buzi_id`, `address`, `phone`, `email`, `res_prof_name`, `res_prof_reg`, `created_by`, `created_at`, `verify_by`, `verify_at`, `file_address`, `file_certificate`, `status`, `is_head`) VALUES
-(1, 1, 'Vientiane', '1234567891', 'pragmatiser@gmail.com', 'Nikon', '12345689', '41', '2022-11-01 05:43:10.000000', '', '0000-00-00 00:00:00.000000', 'office/1667314759_PDf__test.pdf', 'office/1667314763_PDf__test_1.pdf', 'Unverified', '1'),
-(2, 1, 'staff', '12345681', 'staff@gmail.com', 'staff', 'staff', '41', '2022-11-01 05:47:19.000000', '', '0000-00-00 00:00:00.000000', 'office/1667319587_PDf__test.pdf', 'office/1667319590_PDf__test_3.pdf', 'Unverified', '0');
+INSERT INTO `tbl_offices` (`id`, `buzi_id`, `address`, `phone`, `email`, `res_prof_name`, `res_prof_reg`, `created_by`, `created_at`, `verified_by`, `verified_at`, `file_address`, `file_certificate`, `status`, `is_head`) VALUES
+(1, 1, 'South', '123456789', 'south@gmail.com', 'Toni', '123456', '41', '2022-12-08 09:07:17.000000', NULL, NULL, 'office/1670529898_PDf__test.pdf', 'office/1670529903_PDf__test_2.pdf', 'Unverified', '1'),
+(2, 1, 'vien', '4567891320', 'vien@gmail.com', 'nikonlay', '789564132', '41', '2022-12-08 09:07:17.000000', NULL, NULL, 'office/1670529994_PDf__test.pdf', 'office/1670529999_PDf__test_1.pdf', 'Unverified', '0');
 
 -- --------------------------------------------------------
 
@@ -259,16 +303,18 @@ CREATE TABLE `tbl_plans` (
   `file` varchar(255) CHARACTER SET utf8 NOT NULL,
   `certificate` varchar(255) CHARACTER SET utf8 NOT NULL,
   `created_by` varchar(255) CHARACTER SET utf8 NOT NULL,
-  `created_at` datetime NOT NULL
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `status_request` enum('Yes','No') NOT NULL DEFAULT 'No'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `tbl_plans`
 --
 
-INSERT INTO `tbl_plans` (`id`, `verify_code`, `client_name`, `client_address_line_1`, `client_address_line_2`, `client_city`, `client_province`, `client_zipcode`, `erfno`, `hia_sensitivity`, `municipal`, `professional_reg_number`, `professional`, `contact_email`, `contact_phone`, `contact_address_line_1`, `contact_address_line_2`, `contact_city`, `contact_province`, `contact_zipcode`, `project_plan_no`, `project_title`, `occupancy`, `project_cost`, `project_area`, `project_address_line_1`, `project_address_line_2`, `project_city`, `project_province`, `project_zipcode`, `responsible_qs`, `file`, `certificate`, `created_by`, `created_at`) VALUES
-(1, '40925', 'Dev', 'test', 'test', 'test', 'KwaZulu-Natal', '00000', 123456789, 'test', 'Ba-Phalaborwa Local Municipality', '123456789', 'test', 'test@gmail.com', '1234567890', 'test', 'test', 'test', '123456789', '12300', '85XQ3', 'test', 'test', '123456789', '123456789', 'test', 'test', 'test', 'Gauteng', '11111', 'test', 'plan/1665440118_PDf__test.pdf', '1665440925_test.pdf', '41', '2022-10-11 12:28:45'),
-(2, '77610', 'Dev', 'address', 'address', 'address', 'KwaZulu-Natal', '123456', 123456, 'test', 'Ba-Phalaborwa Local Municipality', '123456', 'test', 'address@gmail.com', '123456789', 'address', 'address', 'address', '123456', '123456', 'Z8Y97', 'PDF Bottom', 'test', '123456', '123546', 'address', 'address', 'address', 'Gauteng', '123456', 'test', 'plan/1667177499_PDf__test.pdf', '1667177610_PDF Bottom.pdf', '41', '2022-10-31 01:53:30');
+INSERT INTO `tbl_plans` (`id`, `verify_code`, `client_name`, `client_address_line_1`, `client_address_line_2`, `client_city`, `client_province`, `client_zipcode`, `erfno`, `hia_sensitivity`, `municipal`, `professional_reg_number`, `professional`, `contact_email`, `contact_phone`, `contact_address_line_1`, `contact_address_line_2`, `contact_city`, `contact_province`, `contact_zipcode`, `project_plan_no`, `project_title`, `occupancy`, `project_cost`, `project_area`, `project_address_line_1`, `project_address_line_2`, `project_city`, `project_province`, `project_zipcode`, `responsible_qs`, `file`, `certificate`, `created_by`, `created_at`, `updated_at`, `status_request`) VALUES
+(1, '40925', 'Dev-update', 'test-second', 'test', 'test', 'KwaZulu-Natal', '00000', 123456789, 'test', 'Ba-Phalaborwa Local Municipality', '123456789', 'test', 'test@gmail.com', '1234567890', 'test', 'test', 'test', '123456789', '12300', '85XQ3', 'test-save', 'test', '123456789', '123456789', 'test', 'test', 'test', 'Gauteng', '11111', 'test', 'plan/1665440118_PDf__test.pdf', '1670251766_test-save.pdf', '41', '2022-10-11 12:28:45', '2022-12-05 03:49:26', 'Yes'),
+(2, '77610', 'Developer', 'address', 'address', 'address', 'KwaZulu-Natal', '123456', 123456, 'test', 'Ba-Phalaborwa Local Municipality', '123456', 'test', 'address@gmail.com', '123456789', 'address', 'address', 'address', '123456', '123456', 'Z8Y97', 'Save Button success', 'test', '123456', '123546', 'address', 'address', 'address', 'Gauteng', '123456', 'test', 'plan/1667177499_PDf__test.pdf', '1670253022_Save Button success.pdf', '41', '2022-10-31 01:53:30', '2022-12-05 04:10:22', 'Yes');
 
 -- --------------------------------------------------------
 
@@ -286,12 +332,14 @@ CREATE TABLE `tbl_profile` (
   `employer` varchar(128) CHARACTER SET utf8 NOT NULL,
   `appointment` varchar(255) CHARACTER SET utf8 NOT NULL,
   `pratical_certification` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `qualification` varchar(255) CHARACTER SET utf8 NOT NULL,
   `cv` varchar(255) CHARACTER SET utf8 NOT NULL,
   `exp_year` varchar(32) CHARACTER SET utf8 NOT NULL,
   `full_part` varchar(32) CHARACTER SET utf8 NOT NULL,
   `jtitle` varchar(128) CHARACTER SET utf8 NOT NULL,
   `updated_at` date NOT NULL,
-  `status` enum('Unverified','Verified','Pending') CHARACTER SET utf8 NOT NULL DEFAULT 'Unverified',
+  `status` enum('Unverified','Verified') CHARACTER SET utf8 NOT NULL DEFAULT 'Unverified',
+  `status_request` enum('Yes','No') CHARACTER SET utf8 NOT NULL DEFAULT 'No',
   `verified_by` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
   `verified_at` date DEFAULT NULL,
   `user_id` varchar(128) CHARACTER SET utf8 NOT NULL,
@@ -302,8 +350,8 @@ CREATE TABLE `tbl_profile` (
 -- Dumping data for table `tbl_profile`
 --
 
-INSERT INTO `tbl_profile` (`id`, `name`, `surname`, `id_no`, `council`, `reg_no`, `employer`, `appointment`, `pratical_certification`, `cv`, `exp_year`, `full_part`, `jtitle`, `updated_at`, `status`, `verified_by`, `verified_at`, `user_id`, `is_director`) VALUES
-(1, 'devTest', 'test', '123456789', 'SACAP', '123456789', 'Nyathi', 'profile/1665438135_PDf__test.pdf', 'profile/1665438141_PDf__test_1.pdf', 'profile/1665438144_PDf__test_3.pdf', '6 year', '25', 'Mobile Developement', '2022-11-01', 'Unverified', NULL, NULL, '41', '1');
+INSERT INTO `tbl_profile` (`id`, `name`, `surname`, `id_no`, `council`, `reg_no`, `employer`, `appointment`, `pratical_certification`, `qualification`, `cv`, `exp_year`, `full_part`, `jtitle`, `updated_at`, `status`, `status_request`, `verified_by`, `verified_at`, `user_id`, `is_director`) VALUES
+(1, 'devTest', 'test', '123456789', 'SACAP', '123456789', 'Nyathi', 'profile/1665438135_PDf__test.pdf', 'profile/1665438141_PDf__test_1.pdf', 'profile/1676283382_SouCV.pdf', 'profile/1665438144_PDf__test_3.pdf', '6 year', '25', 'Mobile Developement', '2023-02-13', 'Unverified', 'Yes', NULL, NULL, '41', '1');
 
 -- --------------------------------------------------------
 
@@ -339,15 +387,20 @@ CREATE TABLE `tbl_projects` (
   `final_certification` varchar(255) CHARACTER SET utf8 NOT NULL,
   `final_account` varchar(255) CHARACTER SET utf8 NOT NULL,
   `created_by` varchar(255) CHARACTER SET utf8 NOT NULL,
-  `completed_at` varchar(256) CHARACTER SET utf8 DEFAULT NULL
+  `completed_at` varchar(256) CHARACTER SET utf8 DEFAULT NULL,
+  `status_verified` enum('Verified','Unverified') CHARACTER SET utf8 NOT NULL DEFAULT 'Unverified',
+  `verified_at` datetime DEFAULT NULL,
+  `verified_by` varchar(255) CHARACTER SET utf8 DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `tbl_projects`
 --
 
-INSERT INTO `tbl_projects` (`id`, `title`, `type`, `prof_type`, `started_at`, `description`, `const_cost`, `final_cost`, `variable`, `prof_cost`, `client_name`, `pl_name`, `pl_email`, `pl_phone`, `proj_address`, `proj_gps`, `proj_street`, `proj_city`, `proj_state`, `proj_zip`, `status`, `status_verify`, `appointment`, `pratical_certification`, `final_certification`, `final_account`, `created_by`, `completed_at`) VALUES
-(1, 'update', 'Residential', 'Project Manager', '2022-09-01', 'test', '100000', '10000', '9999900.00', '100000', 'test', 'test', 'test@gmail.com', '1234567890', 'update', 'test', 'test', 'test', 'test', '000000', '', '1', 'project/1664859154_PDf__test.pdf', 'project/1664859162_PDf__test_1.pdf', 'project/1664859165_PDf__test_2.pdf', 'project/1664859167_PDf__test_3.pdf', '41', '');
+INSERT INTO `tbl_projects` (`id`, `title`, `type`, `prof_type`, `started_at`, `description`, `const_cost`, `final_cost`, `variable`, `prof_cost`, `client_name`, `pl_name`, `pl_email`, `pl_phone`, `proj_address`, `proj_gps`, `proj_street`, `proj_city`, `proj_state`, `proj_zip`, `status`, `status_verify`, `appointment`, `pratical_certification`, `final_certification`, `final_account`, `created_by`, `completed_at`, `status_verified`, `verified_at`, `verified_by`) VALUES
+(1, 'update', 'Residential', 'Project Manager', '2022-09-01', 'test', '100000', '100000', '9999900.00', '100000', 'test', 'test', 'test@gmail.com', '1234567890', 'update', 'test', 'test', 'test', 'test', '000000', 'Completed', '0', 'project/1664859154_PDf__test.pdf', '', '', '', '41', '', 'Unverified', NULL, NULL),
+(2, 'Add save', 'Residential', 'Project Manager', '2022-11-01', 'Add Save Button', '100000', '100000', '0.00', '50000', 'Tomi', 'Nikolay', 'nurvwshop@gmail.com', '1234567890', '13456', '123456', 'Street', 'City', 'State', '123456', 'Completed', '1', 'project/1670234912_PDf__test.pdf', 'project/1670234919_PDf__test_2.pdf', 'project/1670234924_PDf__test_2.pdf', 'project/1670234927_PDf__test.pdf', '41', '2022-12-30', 'Unverified', NULL, NULL),
+(3, 'Social App', 'Residential', 'Project Manager', '2022-12-06', 'Social Mobile App', '200000', '150000', '-33.33', '100000', 'Nyathi', 'Toni', 'toni@gmail.com', '123456789', '123456789', '123456789', 'Toni Street', 'Capital', 'Capital', '00000', 'Completed', '0', 'project/1671422844_PDf__test.pdf', 'project/1671422956_PDf__test_1.pdf', 'project/1671422964_PDf__test_2.pdf', 'project/1671422966_PDf__test_3.pdf', '41', '2022-12-30', 'Unverified', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -356,14 +409,16 @@ INSERT INTO `tbl_projects` (`id`, `title`, `type`, `prof_type`, `started_at`, `d
 --
 
 CREATE TABLE `tbl_reports` (
-  `id` bigint(128) NOT NULL,
+  `id` bigint(255) NOT NULL,
   `accessor` varchar(128) DEFAULT NULL,
-  `report_type` varchar(100) NOT NULL,
+  `profess` varchar(255) NOT NULL,
+  `content_id` varchar(255) NOT NULL,
+  `report_type` enum('office','project','profile','business') NOT NULL DEFAULT 'office',
   `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(255) NOT NULL,
-  `filename` varchar(256) DEFAULT NULL,
+  `created_by` varchar(255) NOT NULL,
+  `filename` varchar(255) DEFAULT NULL,
   `data` text NOT NULL,
-  `report_content` varchar(256) NOT NULL
+  `score` varchar(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -413,11 +468,11 @@ INSERT INTO `tbl_roles` (`roleId`, `role`) VALUES
 
 CREATE TABLE `tbl_schedule` (
   `id` bigint(255) NOT NULL,
-  `name` varchar(128) NOT NULL,
-  `verify_target` varchar(128) NOT NULL,
-  `date` datetime(6) NOT NULL,
-  `location` varchar(128) DEFAULT NULL,
-  `created_by` varchar(255) CHARACTER SET utf16 NOT NULL,
+  `verify_user_id` varchar(255) NOT NULL,
+  `verify_target` enum('office','project','profile','business') NOT NULL DEFAULT 'profile',
+  `date` varchar(64) NOT NULL,
+  `verify_content_id` varchar(255) NOT NULL,
+  `created_by` varchar(255) NOT NULL,
   `is_done` enum('1','0') NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -425,9 +480,8 @@ CREATE TABLE `tbl_schedule` (
 -- Dumping data for table `tbl_schedule`
 --
 
-INSERT INTO `tbl_schedule` (`id`, `name`, `verify_target`, `date`, `location`, `created_by`, `is_done`) VALUES
-(1, 'Mdingwa Nyathi', 'mdingwa@sivago.co.za', '2022-01-12 15:10:27.039000', 'Durban', '40', '0'),
-(2, 'Mdingwa Nyathi', 'mdingwa@sivago.co.za', '2022-01-13 20:09:48.238000', 'Durban', '40', '0');
+INSERT INTO `tbl_schedule` (`id`, `verify_user_id`, `verify_target`, `date`, `verify_content_id`, `created_by`, `is_done`) VALUES
+(1, '41', 'office', '2023-01-11T03:30', '1', '40', '0');
 
 -- --------------------------------------------------------
 
@@ -446,6 +500,8 @@ CREATE TABLE `tbl_staffs` (
   `phone` varchar(128) CHARACTER SET utf8 NOT NULL,
   `email` varchar(128) CHARACTER SET utf8 NOT NULL,
   `file_appointment` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `file_prof_registration` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `file_qualification` varchar(255) CHARACTER SET utf8 NOT NULL,
   `file_cv` varchar(255) CHARACTER SET utf8 NOT NULL,
   `created_by` varchar(128) CHARACTER SET utf8 NOT NULL,
   `created_at` datetime NOT NULL,
@@ -457,9 +513,9 @@ CREATE TABLE `tbl_staffs` (
 -- Dumping data for table `tbl_staffs`
 --
 
-INSERT INTO `tbl_staffs` (`id`, `buzi_id`, `name`, `surname`, `jtitle`, `exp_year`, `prof_reg_no`, `phone`, `email`, `file_appointment`, `file_cv`, `created_by`, `created_at`, `status`, `office_id`) VALUES
-(1, 1, 'staff', 'staff', 'staff', '6year', 'staff', '123458', 'staff@gmail.com', 'office/1667319569_PDf__test.pdf', 'office/1667319572_PDf__test_2.pdf', '41', '2022-11-01 05:20:01', 'Unverified', '1'),
-(3, 1, 'dev', 'dev', 'dev', '5year', '12345689521', '123456852', 'dev@gmail.com', 'office/1667331326_PDf__test_3.pdf', '', '41', '2022-11-01 08:50:58', 'Unverified', '2');
+INSERT INTO `tbl_staffs` (`id`, `buzi_id`, `name`, `surname`, `jtitle`, `exp_year`, `prof_reg_no`, `phone`, `email`, `file_appointment`, `file_prof_registration`, `file_qualification`, `file_cv`, `created_by`, `created_at`, `status`, `office_id`) VALUES
+(1, 1, 'hstaff1', 'hstaff', 'mobile', '4year', '123456', '123456781300', 'mobile@gmail.com', 'office/1670528612_PDf__test.pdf', 'office/1670528619_PDf__test_1.pdf', 'office/1670528626_PDf__test_2.pdf', 'office/1670528628_PDf__test_3.pdf', '41', '2022-12-08 08:44:40', 'Unverified', '1'),
+(2, 1, 'staff1', 'WWW', 'MOBILE', '3year', '7524', '45612318543', 'mobile@gmail.com', 'office/1670529948_PDf__test.pdf', 'office/1670529955_PDf__test_1.pdf', 'office/1670529961_PDf__test_2.pdf', 'office/1670529966_PDf__test_3.pdf', '41', '2022-12-08 09:07:17', 'Unverified', '2');
 
 -- --------------------------------------------------------
 
@@ -530,6 +586,12 @@ ALTER TABLE `tbl_bids`
 -- Indexes for table `tbl_business`
 --
 ALTER TABLE `tbl_business`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tbl_directors`
+--
+ALTER TABLE `tbl_directors`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -639,10 +701,16 @@ ALTER TABLE `tbl_business`
   MODIFY `id` bigint(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `tbl_directors`
+--
+ALTER TABLE `tbl_directors`
+  MODIFY `id` bigint(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `tbl_equips`
 --
 ALTER TABLE `tbl_equips`
-  MODIFY `id` bigint(128) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(128) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `tbl_id`
@@ -654,7 +722,7 @@ ALTER TABLE `tbl_id`
 -- AUTO_INCREMENT for table `tbl_last_login`
 --
 ALTER TABLE `tbl_last_login`
-  MODIFY `id` bigint(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` bigint(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT for table `tbl_offices`
@@ -678,13 +746,13 @@ ALTER TABLE `tbl_profile`
 -- AUTO_INCREMENT for table `tbl_projects`
 --
 ALTER TABLE `tbl_projects`
-  MODIFY `id` bigint(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tbl_reports`
 --
 ALTER TABLE `tbl_reports`
-  MODIFY `id` bigint(128) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(255) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tbl_reset_password`
@@ -702,13 +770,13 @@ ALTER TABLE `tbl_roles`
 -- AUTO_INCREMENT for table `tbl_schedule`
 --
 ALTER TABLE `tbl_schedule`
-  MODIFY `id` bigint(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `tbl_staffs`
 --
 ALTER TABLE `tbl_staffs`
-  MODIFY `id` bigint(128) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(128) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `tbl_users`

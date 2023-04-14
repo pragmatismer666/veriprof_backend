@@ -196,7 +196,7 @@ class Support_model extends CI_Model
         $this->db->select("BaseTbl.id, BaseTbl.address, BaseTbl.phone, BaseTbl.email, BaseTbl.res_prof_name, BaseTbl.created_by, BaseTbl.file_address, BaseTbl.file_certificate, BaseTbl.is_head, BaseTbl.status, Business.pname, Business.pcipc_reg_no, Business.ptype");
         $this->db->from("tbl_offices as BaseTbl");
         $offices = $this->db->join("tbl_business as Business", "Business.id = BaseTbl.buzi_id")->where($data)->get()->result();
-        log_message("debug", "Support_model getOfficesInfo office = : " . json_encode($offices));
+        // log_message("debug", "Support_model getOfficesInfo office = : " . json_encode($offices));
         for ($i = 0; $i < sizeof($offices); $i++) {
             $schedules = $this->db->select("*")->from("tbl_schedule")->where(array("verify_target" => "office", "verify_content_id" => $offices[$i]->id, "verify_user_id" => $offices[$i]->created_by))->get()->result();
             if ($schedules && sizeof($schedules) > 0) {

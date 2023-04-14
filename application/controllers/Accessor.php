@@ -100,13 +100,13 @@ class Accessor extends CI_Controller
 
     public function getUnverifiedProject()
     {
-        $unverifiedProject = $this->project_model->getProjectsInfo(array("status_verified" => "Unverified", "status_verify"=>"1"));
+        $unverifiedProject = $this->project_model->getProjectsInfo(array("status_verified" => "Unverified", "status_verify" => "1"));
         return $this->response(["status" => "success", "data" => $unverifiedProject]);
     }
 
     public function getVerifiedProject()
     {
-        $verifiedProject = $this->project_model->getProjectsInfo(array("status_verified" => "Verified", "status_verify"=>"1"));
+        $verifiedProject = $this->project_model->getProjectsInfo(array("status_verified" => "Verified", "status_verify" => "1"));
         return $this->response(["status" => "success", "data" => $verifiedProject]);
     }
 
@@ -146,7 +146,7 @@ class Accessor extends CI_Controller
         $projectNum = 0;
         $OfficeNum = 0;
         $profileNum = 0;
-        foreach( $reports as $report ) {
+        foreach ($reports as $report) {
             if ($report->report_type == "office") {
                 $OfficeNum++;
             } else if ($report->report_type == "project") {
@@ -174,6 +174,12 @@ class Accessor extends CI_Controller
     public function getBusiness()
     {
         $result = $this->db->select("*")->from("tbl_business")->get()->result();
+        foreach ($result as $key => $business) {
+            $office = $this->db->select("*")->from("tbl_offices")->where(array("buzi_id" => $business->id))->get()->first_row();
+            log_message("debug", "Accessor.php getBusiness office = : " . json_encode($office));
+            $result[$key]->office[] = $office;
+        }
+        log_message("debug", "Accessor.php getBusiness result = : " . json_encode($result));
         $this->response(["status" => "success", "data" => $result]);
     }
 
